@@ -1,0 +1,3 @@
+GitHub connector write-access verification.
+
+This file was created successfully through the GitHub connector.
