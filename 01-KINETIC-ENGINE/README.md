@@ -38,6 +38,10 @@ This phase is complete only when:
 - `12_MCP_CONTRACT_AND_ENGINE_CROSS_LAYER_AUDIT.md`
 - `13_ENGINE_SOURCE_TREE_AND_TEST_AUDIT.md`
 - `14_BUILD_RUNTIME_ARTIFACTS_AND_FINAL_CLOSURE.md`
+- `15_TOOLS_IMPLEMENTATION_RECONCILIATION.md`
+- `16_TOOL_CALLSITE_AND_AGENT_LOOP_RECONCILIATION.md`
+- `17_TOOL_CATALOG_POLICY_DRIFT.md`
+- `18_FINAL_SECURITY_AND_END_TO_END_AUDIT.md`
 
 ## Initial crate map
 `main.rs` declares these engine modules:
@@ -77,9 +81,9 @@ This phase is complete only when:
 - [ ] Every Rust module read in full, including all relevant colocated tests
 - [ ] Every tool implementation and call site reconciled
 - [ ] Complete cross-module call graph
-- [ ] Final feature map
-- [ ] Final security/safety audit
-- [ ] End-to-end execution flows
+- [x] Feature map substantially reconstructed
+- [x] Security/safety architecture substantially audited
+- [x] Primary end-to-end execution/index/retrieval flows reconstructed
 - [ ] Final engine completion review
 - [ ] Engine marked COMPLETE
 
@@ -101,9 +105,12 @@ The durable records cover the major architecture of:
 - Intent and Pillars;
 - Team indexer serving;
 - execution ledger and progress/streaming;
-- runtime/build artifacts and regression guardrails.
+- runtime/build artifacts and regression guardrails;
+- concrete tool dispatch and agent-loop/legacy-loop differences;
+- tool catalog/policy documentation drift;
+- security boundaries and primary end-to-end flows.
 
-These records describe implemented behavior, stubs/placeholders, legacy paths, and known boundaries. They do **not** replace the final module-by-module verification required below.
+These records describe implemented behavior, stubs/placeholders, legacy paths, compatibility boundaries, and known drift. They do **not** replace the final module-by-module verification required below.
 
 ## Final closure work
 Before marking Engine complete, the remaining verification must explicitly:
@@ -111,12 +118,13 @@ Before marking Engine complete, the remaining verification must explicitly:
 1. Read every remaining Rust module/file in full.
 2. Read relevant colocated tests and guardrails.
 3. Reconcile every public orchestrator/MCP/tool method with its callers.
-4. Build the cross-module call graph for the primary execution paths.
+4. Build the complete cross-module call graph for the primary execution paths.
 5. Map every claimed feature to a concrete implementation path or mark it as stub/legacy/placeholder.
-6. Perform the final security/safety audit across filesystem, command execution, Sentry, provider/network, secrets, and process boundaries.
-7. Reconstruct end-to-end flows from host request → MCP → orchestrator → intent/lane → provider/tool execution → ledger/state → response.
-8. Verify index/query/update/delete flows end-to-end.
-9. Update `00_MASTER_ARCHITECTURE.md` only after the above gates pass.
+6. Reconcile catalog → policy → Rust schema → Orchestrator → TypeScript bridge contracts, including known documentation drift.
+7. Perform the final security/safety audit across filesystem, command execution, Sentry, provider/network, secrets, and process boundaries.
+8. Reconstruct end-to-end flows from host request → MCP → orchestrator → intent/lane → provider/tool execution → ledger/state → response.
+9. Verify index/query/update/delete flows end-to-end.
+10. Update `00_MASTER_ARCHITECTURE.md` only after the above gates pass.
 
 ## Next action
 Continue the final Engine closure work. **Do not move to Kinetic Core until the checklist is complete.**
