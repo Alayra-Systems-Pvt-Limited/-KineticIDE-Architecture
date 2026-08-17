@@ -13,9 +13,9 @@ This repository is the durable technical knowledge base for studying the existin
 The KineticIDE source repository is treated as **read-only for this study**. No source file, configuration, documentation, generated artifact, or other byte is to be modified, deleted, renamed, or reformatted as part of the architecture study.
 
 ## Study order
-1. `extensions/kinetic-core/kinetic-engine` — **STUDY COMPLETE / implementation-status audit recorded**
-2. `extensions/kinetic-core` — next
-3. `extensions/kinetic-ui` — after core is understood
+1. `extensions/kinetic-core/kinetic-engine` — **FINAL CLOSURE IN PROGRESS**
+2. `extensions/kinetic-core` — blocked until Engine completion gate closes
+3. `extensions/kinetic-ui` — after Core is understood
 4. Cross-layer end-to-end audit
 
 ## Study method
@@ -27,9 +27,9 @@ For significant features we trace:
 ## Phase 1 — Kinetic Engine
 
 ### Status
-**STUDY COMPLETE.**
+**FINAL CLOSURE IN PROGRESS — NOT COMPLETE.**
 
-This means the Engine study phase has been reconciled into the architecture repository. It does **not** mean every Engine capability is production-complete. Implemented, partial, scaffolded, legacy, unused, and known-broken areas are documented rather than conflated with study completeness.
+The Engine has been deeply studied and its major architecture is documented, but the authoritative completion checklist has not yet been closed. A previous ledger update prematurely marked Engine complete; that status has been corrected.
 
 ### Durable study records
 - `01-KINETIC-ENGINE/01_ENTRYPOINT_AND_RUNTIME.md`
@@ -82,56 +82,22 @@ This means the Engine study phase has been reconciled into the architecture repo
 
 ### Major verified responsibilities
 
-**MCP**
-- Rust↔host process boundary over stdin/stdout NDJSON.
-- Request/response correlation and streaming events.
-- Host commands for execution, indexing, retrieval, context lifecycle, feedback, audio, blueprint revision, and health/ping.
-- Background index progress forwarding and idle vector compaction.
+The durable Engine records document the implementation of MCP, Orchestrator, Indexer/Retrieval, Tools, Intent, Pillars, execution ledger, progress/streaming, Team indexer, runtime/build artifacts, and regression guardrails. They also distinguish implemented behavior from stubs, placeholders, legacy paths, and historical build evidence.
 
-**Orchestrator**
-- Central execution control plane.
-- Builds provider requests and mission/trace envelopes.
-- Enforces execution lanes and approval policies.
-- Supports streaming, structured tool-call recovery, retries/self-healing, discovery, legacy planner paths, and Rust-owned tool loops.
-- Maintains session context and execution state.
+## Engine final closure gate
 
-**Indexer / Retrieval**
-- Canonical workspace indexing through `WorkspaceIndexer`.
-- Single-flight build coalescing.
-- Git-aware incremental behavior.
-- Embedding and LanceDB persistence.
-- Hybrid vector/BM25 retrieval with RRF.
-- GraphRAG expansion and graph health reporting.
-- Revision-aware retrieval cache.
-- Team HTTP indexer mode with authenticated query/status/index APIs.
+Before Engine can be marked complete, the following must be explicitly verified against the source revision:
 
-**Tools**
-- Native workspace/file/search/command/web/serving/debug and related operations.
-- Tool schemas expose model-facing capabilities.
-- Policy and lane restrictions are applied before execution.
-- Command execution has deterministic tiered risk classification.
-- Sentry/host approval is an additional permission boundary.
-- Destructive command classification includes shell-wrapper recursion, chain splitting, Windows/Unix destructive commands, and force-push protection.
-
-**Intent / Pillars**
-- Intent classifier selects an execution lane and capability ceiling.
-- Mission builder converts classified intent into execution metadata.
-- Persistent context/state/memory/feedback facilities exist as supporting pillars.
-- Safety gate exists as a deterministic layer; `tools::command_risk` is the active command-risk authority, while `pillars::risk_engine` is reserved/scaffolded.
-
-## Engine implementation-status principles
-
-The study distinguishes architecture knowledge from production readiness. Examples identified during the study include:
-
-- MCP bridge infrastructure placeholder paths.
-- Team `/register` endpoint is a deliberate `501 Not Implemented` contract placeholder for future shard-worker registration.
-- Some pillar helpers are currently unused/dead-code according to compiler warnings.
-- Historical build/check artifacts in the repository show prior compile failures and warnings; these are recorded as historical artifacts rather than assumed to represent the current source without verification.
-- The source contains compatibility/legacy execution paths alongside the newer Rust-owned agent loop.
-
-## Build/verification note
-
-Repository artifacts include historical `cargo check` / build logs. One recorded check reports a LanceDB API visibility mismatch around `FullTextSearchQuery`; another historical check reports `main.rs` workspace/UUID compilation issues. These artifacts are dated evidence, not proof of the current source state. Before production release, the current commit should be built/tested independently.
+1. Every remaining Rust module/file is read in full.
+2. Relevant colocated tests and architecture guardrails are read.
+3. Every tool implementation and its call sites are reconciled.
+4. Every public Orchestrator/MCP/tool method is reconciled with callers.
+5. The principal cross-module call graph is complete.
+6. Every claimed feature is mapped to an implementation path or explicitly classified as stub/legacy/placeholder.
+7. Final filesystem/command/Sentry/provider/network/secrets/process security audit is complete.
+8. End-to-end host → MCP → Orchestrator → Intent/Lane → Provider/Tool → Ledger/State → result flows are reconstructed.
+9. Index/update/delete/retrieve flows are reconstructed end-to-end.
+10. Only after these gates pass is `ENGINE COMPLETE` allowed.
 
 ## Security architecture
 
@@ -149,29 +115,7 @@ OS/filesystem/network operation
 
 Blueprint approval and Sentry approval are separate controls. Tool execution is not trusted merely because the model requested a tool.
 
-## Persistence and state
-
-Primary durable/runtime stores and state include LanceDB/Arrow index storage, embedding/vector tables, symbol graph data, file/Git revision metadata, process-local retrieval cache, execution ledger, session/context/memory/feedback facilities, and host-managed persisted session history for rehydration.
-
-## Engine completion boundary
-
-The Engine study is complete enough to move to Core because the architecture repository now contains:
-
-1. source-tree inventory;
-2. subsystem responsibilities;
-3. principal APIs and transport contracts;
-4. state/persistence boundaries;
-5. security/safety boundaries;
-6. indexing/retrieval architecture;
-7. orchestration lifecycle;
-8. tool policy and risk model;
-9. implementation/stub/legacy distinctions;
-10. build/test/regression evidence;
-11. explicit cross-layer contracts to Core.
-
-If later source changes are made to KineticIDE, this ledger must be revalidated against the new source commit rather than assumed unchanged.
-
 ## Current phase pointer
-**Phase 2 — `extensions/kinetic-core`**
+**Phase 1 — Kinetic Engine final closure**
 
-Next study target: enumerate the complete Core tree, then trace the Core↔Engine boundary file-by-file without modifying the KineticIDE source repository.
+Kinetic Core study is **not the active phase yet**. Continue closing the Engine checklist first.
