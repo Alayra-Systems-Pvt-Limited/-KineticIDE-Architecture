@@ -1,4 +1,4 @@
-# Kinetic Engine Study
+# Kinetic Engine Study Ledger
 
 ## Scope
 Complete implementation study of:
@@ -22,6 +22,22 @@ This phase is complete only when:
 5. Features are mapped to concrete implementation paths.
 6. Security, safety, persistence, networking, process boundaries, and failure behavior are documented.
 7. Any uncertainty or inaccessible file is explicitly recorded as `BLOCKED` rather than guessed.
+
+## Study records
+- `01_ENTRYPOINT_AND_RUNTIME.md`
+- `02_MCP_BRIDGE_AND_DISPATCH.md`
+- `03_INDEXER_SUBSYSTEM.md`
+- `04_INDEX_BUILD_RETRIEVAL_STORAGE.md`
+- `05_EXECUTION_AI_TOOLS_AND_RUNTIME_SUPPORT.md`
+- `06_ORCHESTRATOR_CONTROL_PLANE_PART1.md`
+- `07_ORCHESTRATOR_EXECUTION_LIFECYCLE.md`
+- `08_ORCHESTRATOR_EXECUTION_AND_SELF_HEAL.md`
+- `09_MCP_RUNTIME_AND_ORCHESTRATOR_REMAINING.md`
+- `10_TOOLS_POLICY_SCHEMAS_AND_COMMAND_RISK.md`
+- `11_INTENT_PILLARS_AND_REMAINING_TOOLS.md`
+- `12_MCP_CONTRACT_AND_ENGINE_CROSS_LAYER_AUDIT.md`
+- `13_ENGINE_SOURCE_TREE_AND_TEST_AUDIT.md`
+- `14_BUILD_RUNTIME_ARTIFACTS_AND_FINAL_CLOSURE.md`
 
 ## Initial crate map
 `main.rs` declares these engine modules:
@@ -52,53 +68,55 @@ This phase is complete only when:
 
 `IndexerMode` is re-exported from `indexer`.
 
-## Entry-point behavior already verified
-`main()`:
-1. lowers process priority (`BELOW_NORMAL_PRIORITY_CLASS` on Windows; `nice(10)` on Linux/macOS);
-2. loads `.env` through `dotenvy`;
-3. parses CLI/subcommands;
-4. initializes GPU/embedder cache state;
-5. defaults to MCP sidecar mode when no subcommand is provided;
-6. supports `serve` mode for the team shared indexer.
-
-`init_gpu_and_embedder_cache()` checks global model storage, detects GPU state, configures `ORT_DYLIB_PATH` when CUDA is active and the expected DLL exists, records boot GPU information, and logs the canonical vector-index pipeline.
-
-`run_mcp_sidecar()` constructs `McpServer` and passes a mutable `Orchestrator` to its listener.
-
-`run_team_serve()` builds `indexer::config::ServeConfig` from CLI/env arguments and delegates to `indexer::serve::run`.
-
-## Dependency-level architecture signals
-From `Cargo.toml`, the engine uses:
-- Tokio, futures/futures-util for async/concurrency.
-- Serde/serde_json and anyhow for data/error handling.
-- Reqwest + rustls-backed default TLS for provider/HTTP communication.
-- LanceDB + Arrow for vector persistence.
-- FastEmbed for local embeddings.
-- Tree-sitter grammars for Rust/TypeScript/JavaScript/Python/Go/Java symbol extraction.
-- Petgraph for in-memory graph expansion/GraphRAG.
-- Axum/Tower/Tower-HTTP for HTTP serving.
-- Git2 for Git integration.
-- Ignore/globset/regex/dunce/sha2/uuid for workspace traversal, matching, hashing, and IDs.
-- CPAL/Hound/base64 for audio capture/encoding.
-- Image/resvg/usvg/tiny-skia/urlencoding for vision/image processing.
-- Optional `cuda` feature through FastEmbed.
-- Size-focused release profile: opt-level z, LTO, one codegen unit, strip, panic abort.
-
-These are **dependency signals, not final feature conclusions**. Each must be validated against the implementation during the file study.
-
 ## Progress
 - [x] Study ledger initialized
 - [x] Crate manifest read
 - [x] Entry point read
-- [ ] Complete tree inventory
-- [ ] Complete module study
-- [ ] Nested subsystem study
-- [ ] Tests/guardrails study
-- [ ] Cross-module call graph
-- [ ] Feature map
-- [ ] Security/safety audit
+- [x] Major source tree inventory established
+- [x] Major nested subsystems identified and substantially studied
+- [ ] Every Rust module read in full, including all relevant colocated tests
+- [ ] Every tool implementation and call site reconciled
+- [ ] Complete cross-module call graph
+- [ ] Final feature map
+- [ ] Final security/safety audit
 - [ ] End-to-end execution flows
 - [ ] Final engine completion review
+- [ ] Engine marked COMPLETE
+
+## Important status correction
+A previous pass prematurely updated the master architecture to `ENGINE COMPLETE`, while this README still contained the original unmarked completion checklist. That inconsistency was an error in the study bookkeeping.
+
+The checklist is the authoritative completion gate. Therefore **Engine is not yet officially complete**, and Kinetic Core must not be treated as the active study phase until this checklist is closed.
+
+## What has already been deeply studied
+The durable records cover the major architecture of:
+
+- entry/runtime lifecycle;
+- MCP transport and dispatch;
+- workspace indexing and single-flight builds;
+- embeddings, LanceDB, hybrid retrieval and GraphRAG;
+- AI/provider execution;
+- orchestrator planning/execution/self-healing;
+- tools/policy/command-risk layers;
+- Intent and Pillars;
+- Team indexer serving;
+- execution ledger and progress/streaming;
+- runtime/build artifacts and regression guardrails.
+
+These records describe implemented behavior, stubs/placeholders, legacy paths, and known boundaries. They do **not** replace the final module-by-module verification required below.
+
+## Final closure work
+Before marking Engine complete, the remaining verification must explicitly:
+
+1. Read every remaining Rust module/file in full.
+2. Read relevant colocated tests and guardrails.
+3. Reconcile every public orchestrator/MCP/tool method with its callers.
+4. Build the cross-module call graph for the primary execution paths.
+5. Map every claimed feature to a concrete implementation path or mark it as stub/legacy/placeholder.
+6. Perform the final security/safety audit across filesystem, command execution, Sentry, provider/network, secrets, and process boundaries.
+7. Reconstruct end-to-end flows from host request → MCP → orchestrator → intent/lane → provider/tool execution → ledger/state → response.
+8. Verify index/query/update/delete flows end-to-end.
+9. Update `00_MASTER_ARCHITECTURE.md` only after the above gates pass.
 
 ## Next action
-Continue with complete tree enumeration and then inspect each subsystem in dependency/entry-point order. Do not proceed to Kinetic Core until this checklist is complete.
+Continue the final Engine closure work. **Do not move to Kinetic Core until the checklist is complete.**
