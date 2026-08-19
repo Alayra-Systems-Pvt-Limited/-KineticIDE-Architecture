@@ -14,8 +14,8 @@ Its purpose is to preserve implementation-level understanding of Kinetic IDE so 
 
 The study proceeds layer-by-layer:
 
-1. **Kinetic Engine** — execution, orchestration, tools, MCP, indexing/retrieval, safety, runtime and persistence boundaries.
-2. **Kinetic Core** — host-side integration, commands/events/APIs, state and coordination around the Engine.
+1. **Kinetic Engine** — execution, orchestration, tools, MCP, indexing/retrieval, safety, runtime and persistence boundaries. **COMPLETE.**
+2. **Kinetic Core** — host-side integration, commands/events/APIs, state and coordination around the Engine. **NEXT.**
 3. **Kinetic UI** — user-facing workflows and their end-to-end connection to Core and Engine.
 4. **Cross-layer audit** — reconstruct important features from UI entry point to Engine behavior and back to the result.
 
@@ -80,7 +80,7 @@ At a high level, the studied architecture is:
 
 ## Stack and major boundaries
 
-The current study identifies the following major implementation layers and technologies:
+The Engine study identifies:
 
 - **Rust** — core execution engine and high-performance runtime components.
 - **TypeScript host/Core boundary** — integration with the Workbench/extension host and coordination with the Engine.
@@ -98,7 +98,7 @@ These descriptions are based on the implementation study and are intentionally s
 
 ## Why the Engine has architectural value
 
-The strongest architectural property observed so far is that Kinetic Engine treats AI development as a **controlled runtime problem**, not merely a text-generation problem.
+The strongest architectural property observed is that Kinetic Engine treats AI development as a **controlled runtime problem**, not merely a text-generation problem.
 
 The Engine brings several concerns into one execution architecture:
 
@@ -114,40 +114,51 @@ The important point is not that each individual component is novel in isolation.
 
 ---
 
-## Engine study status
+## Engine study status — COMPLETE
 
-The Engine has been deeply studied and its major architecture is documented in the numbered records under [`01-KINETIC-ENGINE/`](./01-KINETIC-ENGINE/).
+The Engine study is now formally closed for the architecture-study phase.
 
-The master ledger deliberately keeps the Engine in **final closure** until the completion gates are explicitly verified. In particular, the final gate requires reconciliation of every remaining Rust file/module, colocated tests and guardrails, tool implementations and call sites, public Orchestrator/MCP/tool methods, feature-to-implementation mappings, security boundaries, and the principal end-to-end execution and indexing flows.
+The final reconciliation covered:
 
-This distinction is intentional: **deeply studied does not mean the closure checklist is allowed to be marked complete prematurely.**
+- Engine source tree and major modules
+- MCP server and bridge primitives
+- Orchestrator public surfaces and principal callers
+- Rust agent-loop dispatch
+- Tool catalog, schemas, policy and implementations
+- Intent and capability-lane tests
+- Cross-module regression guardrails
+- Context/history/memory/feedback persistence surfaces
+- Indexing/build/retrieval flows
+- Security and Sentry boundaries
+- Principal host → MCP → Engine → effect → state/result flows
 
-### Existing Engine study records
+The final reconciliation record is:
 
-- `01_ENTRYPOINT_AND_RUNTIME.md`
-- `02_MCP_BRIDGE_AND_DISPATCH.md`
-- `03_INDEXER_SUBSYSTEM.md`
-- `04_INDEX_BUILD_RETRIEVAL_STORAGE.md`
-- `05_EXECUTION_AI_TOOLS_AND_RUNTIME_SUPPORT.md`
-- `06_ORCHESTRATOR_CONTROL_PLANE_PART1.md`
-- `07_ORCHESTRATOR_EXECUTION_LIFECYCLE.md`
-- `08_ORCHESTRATOR_EXECUTION_AND_SELF_HEAL.md`
-- `09_MCP_RUNTIME_AND_ORCHESTRATOR_REMAINING.md`
-- `10_TOOLS_POLICY_SCHEMAS_AND_COMMAND_RISK.md`
-- `11_INTENT_PILLARS_AND_REMAINING_TOOLS.md`
-- `12_MCP_CONTRACT_AND_ENGINE_CROSS_LAYER_AUDIT.md`
-- `13_ENGINE_SOURCE_TREE_AND_TEST_AUDIT.md`
-- `14_BUILD_RUNTIME_ARTIFACTS_AND_FINAL_CLOSURE.md`
+`01-KINETIC-ENGINE/19_FINAL_PUBLIC_SURFACE_CALLER_AND_SECURITY_RECONCILIATION.md`
+
+**Important:** “Engine study complete” means the architecture is sufficiently understood to move to Core. It does not mean every production-hardening test or fresh deployment validation has been executed.
+
+### Engine records
+
+The complete Engine study is preserved under [`01-KINETIC-ENGINE/`](./01-KINETIC-ENGINE/), including the final closure and reconciliation records.
 
 ---
 
-# Kinetic Core — reserved study section
+# Kinetic Core — active next phase
 
-**Status: Not yet studied.**
+**Status: Next study phase.**
 
-Once the Engine closure gate is complete, this README will be extended with the implementation study of `extensions/kinetic-core`, including its architecture, responsibilities, APIs/events/commands, state management, Engine integration, and end-to-end feature participation.
+Core will now be studied file-by-file. The study will specifically determine whether the existing Core architecture can support the long-term Kinetic direction:
 
-No Core conclusions are recorded here yet so that this document does not claim knowledge that has not been verified from the source.
+- Engine usable independently from the UI
+- CLI / SDK / MCP / `npx`-style access
+- multiple interfaces sharing the same runtime
+- persistent context and memory across sessions and platforms
+- local ownership of user data
+- future built-in agents and agent squads
+- eventual replacement of the VS Code-based UI with a native Kinetic editor without rebuilding the runtime
+
+No Core conclusions will be recorded until they are verified from source.
 
 ---
 
